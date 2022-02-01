@@ -6,8 +6,8 @@ public class OrbitCameraRig : MonoBehaviour
 {
 
     public Transform thingToLookAt;
-
-
+    public Vector3 offset;
+    public float smoothSpeed = 0.125f;
 
     private float pitch = 0;
     private float yaw = 0;
@@ -49,16 +49,20 @@ public class OrbitCameraRig : MonoBehaviour
 
 
 
-        cam.transform.localPosition = new Vector3(0, 0, z);
+        cam.transform.localPosition = new Vector3(0, 20, z);
 
         // === position: ===
 
         if (thingToLookAt == null) return;
 
-        // transform.position = thingToLookAt.position;
+        Vector3 desiredPosition = thingToLookAt.position + offset;
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        transform.position = smoothedPosition;
+
+        transform.LookAt(thingToLookAt);
 
         //outlays values from AnimMath Ease
-        transform.position = AnimMath.Ease(transform.position, thingToLookAt.position, .001f, Time.deltaTime);
+        //transform.position = AnimMath.Ease(transform.position, thingToLookAt.position, .001f, Time.deltaTime);
 
     }
 }
